@@ -6,6 +6,7 @@ class Deck():
         self.cards = []
 
 
+
         if cards == None or cards == []:
             pass
         elif type(cards) == list:

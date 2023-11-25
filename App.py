@@ -386,6 +386,7 @@ class DeckForm(tk.Frame):
         self.rowconfigure((0,1,2), weight=1)
         self.rowconfigure(1,weight=3)
 
+
         self.lbl = tk.Label(self,text="Add New Deck", font=15)
         self.lbl.grid(row=0, column=0, columnspan=2, sticky="nsew")
 
