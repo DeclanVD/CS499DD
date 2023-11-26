@@ -1,11 +1,99 @@
+#!/usr/bin/env python3
+
 import tkinter as tk
 from tkinter.messagebox import askyesno, showerror, showinfo
 import json
-from cardDecks import *
+# from cardDecks import *
 import random
 import math
 import os
 
+# Classes For Cards and Decks #########################################
+class Deck():
+    def __init__(self, title, cards=None):
+        self.title = title
+        self.cards = []
+
+
+
+        if cards == None or cards == []:
+            pass
+        elif type(cards) == list:
+            remove = []
+            for card in cards:
+                if type(card) != Card:
+                    # print(card)
+                    remove.append(card)
+            for item in remove:
+                cards.remove(item)
+            self.cards.extend(cards)
+        elif type(cards) == Card:
+            self.cards.append(cards)
+
+    def __str__(self):
+        return self.title
+
+    def __len__(self):
+        return len(self.cards)
+    
+    def printCards(self):
+        for card in self.cards:
+            print(card)
+
+    def createAdd(self, front, back):
+        card = Card(front, back)
+        self.cards.append(card)
+
+    def add(self,card):
+        if type(card) == Card:
+            self.cards.append(card)
+        else:
+            print(f"Item {card} is not of class 'Card'")
+    
+    def convJson(self):
+        obj = {}
+        obj["name"] = self.title
+        obj["cards"] = []
+        for card in self.cards:
+            obj["cards"].append(card.convJson())
+        return obj
+    
+    def createCards(cardList):
+        if type(cardList) != list:
+            raise TypeError("Deck.createCards requires Cards to be in a list")
+        cards = []
+        for card in cardList:
+            try:
+                newCard = Card(card['front'],card['back'])
+                cards.append(newCard)
+            except (KeyError, TypeError):
+                continue
+        return cards
+        
+    def deleteCard(self, card):
+        try:
+            index = self.cards.index(card)
+        except ValueError:
+            raise ValueError(f"{card} does not exist in deck")
+        
+        self.cards.pop(index)
+       
+
+class Card():
+    def __init__(self, front, back):
+        self.front = front
+        self.back = back
+    
+    def __str__(self):
+        return f"{self.front} | {self.back}"
+    
+    def convJson(self):
+        obj = {}
+        obj["front"] = self.front
+        obj["back"] = self.back
+        return obj
+
+# Global Functions #######################################
 def saveDecks():
     global decks
     content = {}
@@ -23,6 +111,7 @@ def saveOnClose():
         saveDecks()
     window.destroy()
     
+# Read/Create file for storing card and deck information #####################
 
 file = os.path.isfile("./decks.json")
 if file is False:
@@ -279,6 +368,7 @@ class Home(tk.Frame):
         
     def updateTitle(self):
         radios = self.radios
+        index = list(self.frames_ref.keys()).index(self.selection.get())
         newFrameRef = {}
         for i in range(len(radios)):
             widget = radios[i]
@@ -286,6 +376,7 @@ class Home(tk.Frame):
             oldRef = list(self.frames_ref.keys())[i]
             newFrameRef[decks[i].title] = self.frames_ref[oldRef]
         self.frames_ref = newFrameRef
+        self.selection.set(list(self.frames_ref.keys())[index])
 
 
 # Add Cards ==================================================
@@ -348,7 +439,7 @@ class Form(tk.Frame):
         new_back = self.ent_back.get()
 
         dest.createAdd(new_front,new_back)
-        dest.printCards()
+        #dest.printCards()
 
        
         deck_frm = app.home.frames_ref[title]
