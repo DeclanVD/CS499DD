@@ -1,7 +1,6 @@
 import tkinter as tk
 from tkinter.messagebox import askyesno, showerror, showinfo
 import json
-# from cardDecks import *
 import random
 import math
 import os
@@ -11,8 +10,6 @@ class Deck():
     def __init__(self, title, cards=None):
         self.title = title
         self.cards = []
-
-
 
         if cards == None or cards == []:
             pass
@@ -134,6 +131,9 @@ class App(tk.Frame):
         self.ypad = 15
 
         frm_buttons = tk.Frame(self, height=100, width=100,bg='gray')
+        frm_buttons.rowconfigure((0,1,2,3), weight=1)
+        frm_buttons.rowconfigure(4, weight=4)
+        frm_buttons.columnconfigure(0, weight=1)
         btn_home = tk.Button(frm_buttons, text="Home", cursor="hand2", command=self.switchHome)
         btn_home.grid(row=0,column=0, padx=10, pady= 10, sticky="nsew")
         btn_addFrame = tk.Button(frm_buttons,text="Add Cards",cursor="hand2", command=self.switchAdd_Frame)
@@ -188,13 +188,13 @@ class CardFrame(tk.Frame):
         self.front= card.front
         self.back= card.back
 
-        self.lbl_Front = tk.Label(self, text=self.front, bg="white", cursor="hand2", width=1)
+        self.lbl_Front = tk.Label(self, text=self.front, font=20, wraplength=280, bg="white", cursor="hand2", width=1)
         self.lbl_Front.bind("<Button-1>", self.flip)
         self.lbl_Front.grid(row=1,column=1,sticky="nsew")
         # self.lbl_Front.pack(fill=tk.BOTH, expand=True)
         # self.lbl_Front.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.lbl_Back = tk.Label(self, text=self.back, bg="white", cursor="hand2", width=1)
+        self.lbl_Back = tk.Label(self, text=self.back, font=20, wraplength=280, bg="white", cursor="hand2", width=1, height=1)
         self.lbl_Back.bind("<Button-1>", self.flip)
         self.lbl_Back.grid(row=1,column=1,sticky="nsew")
         # self.lbl_Back.pack(fill=tk.BOTH, expand=True)
@@ -264,7 +264,6 @@ class DeckFrame(tk.Frame):
         self.changeCard(1)
 
     def updateCards(self):
-        self.cards = list(self.deck.cards)
         if len(self.cards)>0:
             self.moveLeft()
             self.moveRight()
@@ -570,6 +569,7 @@ class Browse(tk.Frame):
             label.destroy()
 
         pageMax = self.pageMax
+        self.pagePos = 0
         deck = self.decks_ref[self.deckDest.get()]
         self.currentDeck = deck
         countC = len(deck.cards)
@@ -721,9 +721,12 @@ class EditFrame(tk.Frame):
         browseScreen.grid(row=0, column=0, sticky="nsew")
 
     def editSubmit(self):
+        currentPage = app.browse.pagePos
+        
         self.card.front = self.ent_front.get()
         self.card.back = self.ent_back.get()
         app.browse.setup()
+        app.browse.switchPage(currentPage)
         
         deck = app.browse.currentDeck
         deck_frm = app.home.frames_ref[deck.title]
