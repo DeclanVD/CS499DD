@@ -118,6 +118,10 @@ if file is False:
 with open("./decks.json","r") as f:
     data = json.load(f)
 
+decks = []
+for deck in data:
+    cards = Deck.createCards(data[deck]["cards"])
+    decks.append(Deck(data[deck]["name"], cards))
 
 # tkinter Class setup =====================================================
 # App (main application)==============================================
@@ -264,6 +268,8 @@ class DeckFrame(tk.Frame):
         self.changeCard(1)
 
     def updateCards(self):
+        self.cards = list(self.deck.cards)
+        random.shuffle(self.cards)
         if len(self.cards)>0:
             self.moveLeft()
             self.moveRight()
@@ -779,10 +785,6 @@ class EditFrameDeck(tk.Frame):
 #==========================================================
 # Run App
 #==========================================================
-decks = []
-for deck in data:
-    cards = Deck.createCards(data[deck]["cards"])
-    decks.append(Deck(data[deck]["name"], cards))
 
 
 window = tk.Tk()
