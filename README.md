@@ -41,9 +41,9 @@ button. The cards can be cycled through by clicking on either of the arrow
 buttons. A "Back" button will be in the upper left corner. Clicking on this
 will switch the page back to the list of decks.
 
-## Add Cards
+## Add
 
-The "Add Cards" tab is where you can add new cards to a deck or create a new
+The *Add* tab is where you can add new cards to a deck or create a new
 deck. On this tab, there are two forms. The first form is to add a new card to
 a deck. The second form is to create a new deck.
 

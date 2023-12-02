@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font
 from tkinter.messagebox import askyesno, showerror, showinfo
 import json
 import random
@@ -122,7 +123,7 @@ with open("./decks.json","r") as f:
 # App (main application)==============================================
 class App(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self, parent)
+        tk.Frame.__init__(self, parent, bg="gray14")
         self.columnconfigure(0, weight=1)
         self.columnconfigure(1, weight=7)
         self.rowconfigure(0, weight=1)
@@ -130,22 +131,26 @@ class App(tk.Frame):
         self.xpad = 30
         self.ypad = 15
 
+        self.defaultFont = font.nametofont("TkDefaultFont")
+        self.defaultFont.configure(family="Calibri")
+
         frm_buttons = tk.Frame(self, height=100, width=100,bg='gray')
         frm_buttons.rowconfigure((0,1,2,3), weight=1)
         frm_buttons.rowconfigure(4, weight=4)
         frm_buttons.columnconfigure(0, weight=1)
-        btn_home = tk.Button(frm_buttons, text="Home", cursor="hand2", command=self.switchHome)
+
+        btn_home = tk.Button(frm_buttons, text="Home", font=("Calibri",14), height=1, cursor="hand2", command=self.switchHome)
         btn_home.grid(row=0,column=0, padx=10, pady= 10, sticky="nsew")
-        btn_addFrame = tk.Button(frm_buttons,text="Add Cards",cursor="hand2", command=self.switchAdd_Frame)
+
+        btn_addFrame = tk.Button(frm_buttons,text="Add",font=("Calibri",14), height=1, width=1, cursor="hand2", command=self.switchAdd_Frame)
         btn_addFrame.grid(row=1,column=0, padx=10, pady= 10, sticky="nsew")
         
-        btn_browse = tk.Button(frm_buttons, text="Browse", cursor="hand2", command=self.switchBrowse)
+        btn_browse = tk.Button(frm_buttons, text="Browse",font=("Calibri",14), height=1, cursor="hand2", command=self.switchBrowse)
         btn_browse.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
-        btn_save = tk.Button(frm_buttons, text="Save", cursor="hand2", command=saveDecks)
+        btn_save = tk.Button(frm_buttons, text="Save",font=("Calibri",14), height=1, cursor="hand2", command=saveDecks)
         btn_save.grid(row=3,column=0,padx=10, pady=10, sticky="nsew")
         frm_buttons.grid(row=0, column=0, sticky="nsew")
-        # frm_buttons.grid_propagate(False)
 
         self.home = Home(self)
         self.home.grid(row=0, column=1, padx=self.xpad, pady=self.ypad, sticky="nsew")
@@ -178,7 +183,7 @@ class App(tk.Frame):
 # CardFrame ================================================
 class CardFrame(tk.Frame):
     def __init__(self, parent, card):
-        tk.Frame.__init__(self, parent, height=30, width=80)
+        tk.Frame.__init__(self, parent, height=30, width=80, bg="gray24")
         self.columnconfigure((0,1,2), weight=1)
         self.columnconfigure(1,weight=5)
         self.rowconfigure((0,1,2), weight=1)
@@ -188,17 +193,13 @@ class CardFrame(tk.Frame):
         self.front= card.front
         self.back= card.back
 
-        self.lbl_Front = tk.Label(self, text=self.front, font=20, wraplength=280, bg="white", cursor="hand2", width=1)
+        self.lbl_Front = tk.Label(self, text=self.front, font=("Calibri",(20)), wraplength=280, bg="white", cursor="hand2", width=1)
         self.lbl_Front.bind("<Button-1>", self.flip)
         self.lbl_Front.grid(row=1,column=1,sticky="nsew")
-        # self.lbl_Front.pack(fill=tk.BOTH, expand=True)
-        # self.lbl_Front.place(relx=0.5, rely=0.5, anchor="center")
 
-        self.lbl_Back = tk.Label(self, text=self.back, font=20, wraplength=280, bg="white", cursor="hand2", width=1, height=1)
+        self.lbl_Back = tk.Label(self, text=self.back, font=("Calibri", (20)), wraplength=280, bg="white", cursor="hand2", width=1, height=1)
         self.lbl_Back.bind("<Button-1>", self.flip)
         self.lbl_Back.grid(row=1,column=1,sticky="nsew")
-        # self.lbl_Back.pack(fill=tk.BOTH, expand=True)
-        # self.lbl_Back.place(relx=0.5, rely=0.5, anchor="center")
         self.lbl_Back.grid_forget()
 
         self.cardSides = [self.lbl_Front, self.lbl_Back]
@@ -208,12 +209,11 @@ class CardFrame(tk.Frame):
         self.state = (self.state + 1)%2
         self.cardSides[self.state].tkraise()
         self.cardSides[self.state].grid(row=1,column=1,sticky="nsew")
-        # self.cardSides[self.state].pack(fill=tk.BOTH, expand=True)
 
 # DeckFrame ================================================
 class DeckFrame(tk.Frame):
     def __init__(self, parent, deck):
-        tk.Frame.__init__(self, parent, height=50, width=100)
+        tk.Frame.__init__(self, parent, height=50, width=100, bg="gray24")
         self.columnconfigure(0,weight=1)
         self.rowconfigure((0,1), weight=1)
         self.rowconfigure(0, weight=9)
@@ -230,14 +230,14 @@ class DeckFrame(tk.Frame):
             self.frm_Card = CardFrame(self,Card("",""))
         self.frm_Card.grid(row=0, column=0, sticky="nsew")
            
-        self.frm_control = tk.Frame(self, height=45, width=200, bg='gray')
+        self.frm_control = tk.Frame(self, height=45, width=200, bg='gray24')
         self.frm_control.columnconfigure((0,2), weight=1)
         self.frm_control.columnconfigure(1,weight=5)
         self.frm_control.rowconfigure(0, weight=1)
 
-        self.btn_left = tk.Button(self.frm_control, text="<-", cursor="hand2", command=self.moveLeft)
+        self.btn_left = tk.Button(self.frm_control, text="\u2190", cursor="hand2", command=self.moveLeft)
         self.btn_left.grid(row=0, column=0, sticky="nsew")
-        self.btn_right = tk.Button(self.frm_control, text="->", cursor="hand2", command=self.moveRight)
+        self.btn_right = tk.Button(self.frm_control, text="\u2192", cursor="hand2", command=self.moveRight)
         self.btn_right.grid(row=0, column=2, sticky="nsew")
         self.btn_flip = tk.Button(self.frm_control, text="Flip", cursor="hand2")
         self.btn_flip.grid(row=0, column=1, sticky="nsew")
@@ -272,18 +272,16 @@ class DeckFrame(tk.Frame):
 class Home(tk.Frame):
     def __init__(self, parent):
     # Configuring ===================================
-        tk.Frame.__init__(self, parent, height=300, width=600, bg='gray')
+        tk.Frame.__init__(self, parent, height=300, width=600, bg='gray24')
         global decks
-        # frm_main = tk.Frame(self, height=500, width=130)
         self.rowconfigure(0, weight=1)
         self.columnconfigure((0,2), weight=1)
         self.columnconfigure(1,weight=5)
 
         self.grid_propagate(False)
-        self.deckMenu = tk.Frame(self, height=50, width=100, bg="blue")
-        # self.deckMenu.rowconfigure([0,1,2], weight=1)
+        self.deckMenu = tk.Frame(self, height=50, width=100, bg="navy")
         self.deckMenu.columnconfigure(0,weight=1)
-        # self.deckMenu.grid_propagate(False)
+        
 
     # Frames Set Up===========================================
 
@@ -291,25 +289,17 @@ class Home(tk.Frame):
 
         for f in range(len(decks)):
             frm_deck = DeckFrame(self, decks[f])
-            # frm_card.bind("<Button-1>", frm_card.flip)
             frm_deck.grid(row=0, column=1, sticky="nsew")
             frm_deck.grid_forget()
 
             self.frames_ref[decks[f].title] = frm_deck
-            # frm = tk.Frame(self, bg='green')
-            # lbl = tk.Label(frm, text=f'{decks[f].title}')
-            # lbl.grid(row=0,column=0)
-          
-            # frm.grid(row=0, column=1, sticky="nsew")
-            # frm.grid_forget()
 
-
-        self.btn_back = tk.Button(self, text="Back", cursor="hand2", command=self.back)
+        self.btn_back = tk.Button(self, text="Back", font=("Calibri", (12)), cursor="hand2", command=self.back)
         self.btn_back.grid(row=0, column=0, padx=10, pady=10,sticky="nw")
         self.btn_back.grid_forget()
 
     # Radio Selection Buttons=====================
-        # self.selection = tk.IntVar()
+
         self.selection = tk.StringVar()
         self.radios = []
 
@@ -319,8 +309,7 @@ class Home(tk.Frame):
             radio.grid(row=d,column=0,padx=10,pady=10,sticky="nsew")
 
         self.deckMenu.grid(row=0, column=1, sticky="nsew")
-        # self.homeScreen = tk.Label(self,text="Home")
-        # self.homeScreen.grid(row=0, column=1, padx=30,pady=30, sticky="nsew")
+
 
     # Functions ======================================
     def select(self):
@@ -380,15 +369,15 @@ class Home(tk.Frame):
 # Add Frame ==================================================
 class Add_Frame(tk.Frame):
     def __init__(self, parent):
-        tk.Frame.__init__(self, parent, height=300, width=600, bg='gray')
-        self.columnconfigure((0,1,2,3,4),weight=1)
-        self.columnconfigure((1,3), weight=3)
-        self.rowconfigure((0), weight=1)
-        # self.grid_propagate(False)
+        tk.Frame.__init__(self, parent, height=300, width=600, bg='gray24')
+        self.columnconfigure((0,1,2),weight=1)
+        self.columnconfigure((1), weight=3)
+        self.rowconfigure((0,1), weight=1)
+
         self.form_card = Form(self)
         self.form_card.grid(row=0, column=1, padx=30,pady=30, sticky="nsew")
         self.form_deck = DeckForm(self)
-        self.form_deck.grid(row=0,column=3, padx=30, pady=30,sticky="nsew")
+        self.form_deck.grid(row=1,column=1, padx=30, pady=30,sticky="nsew")
 
 # Form ===================================================================
 class Form(tk.Frame):
@@ -414,11 +403,11 @@ class Form(tk.Frame):
         self.drop.grid(row=1,column=1,sticky="nsew")
 
         self.lbl_front = tk.Label(self, text="Front:")
-        self.ent_front = tk.Entry(self)
+        self.ent_front = tk.Entry(self, font=("Calibri", (14)))
         self.lbl_front.grid(row=2,column=0,sticky="nsew")
         self.ent_front.grid(row=2,column=1,sticky="nsew")
         self.lbl_back = tk.Label(self, text="Back:")
-        self.ent_back = tk.Entry(self)
+        self.ent_back = tk.Entry(self, font=("Calibri", (14)))
         self.ent_back.bind("<Return>", self.submit)
         self.lbl_back.grid(row=3,column=0,sticky="nsew")
         self.ent_back.grid(row=3,column=1,sticky="nsew")
@@ -436,8 +425,6 @@ class Form(tk.Frame):
         new_back = self.ent_back.get()
 
         dest.createAdd(new_front,new_back)
-        #dest.printCards()
-
        
         deck_frm = app.home.frames_ref[title]
 
@@ -445,6 +432,10 @@ class Form(tk.Frame):
         browse = app.browse
         if dest == browse.currentDeck:
             browse.setup()
+
+        self.ent_front.delete(0,tk.END)
+        self.ent_back.delete(0,tk.END)
+        self.ent_front.focus_set()
     
     def updateOptions(self):
         current = self.deckDest.get()
@@ -452,8 +443,6 @@ class Form(tk.Frame):
         self.decks_ref = {}
         for deck in decks:
             self.decks_ref[deck.title] = deck
-        
-        # self.deckDest.set(list(self.decks_ref.keys())[0])
 
         menu = self.drop["menu"]
         menu.delete(0,'end')
@@ -479,7 +468,7 @@ class DeckForm(tk.Frame):
         self.lbl.grid(row=0, column=0, columnspan=2, sticky="nsew")
 
         self.lbl_name = tk.Label(self, text="Name:")
-        self.ent_name = tk.Entry(self)
+        self.ent_name = tk.Entry(self, font=("Calibri", (14)))
         self.ent_name.bind("<Return>", self.submit)
         self.lbl_name.grid(row=1,column=0,sticky='nsew')
         self.ent_name.grid(row=1,column=1,sticky="nsew")
@@ -502,6 +491,8 @@ class DeckForm(tk.Frame):
         card_form.updateOptions()
         app.browse.updateOptions()
 
+        self.ent_name.delete(0,tk.END)
+
 
 # Browse ==================================================
 class Browse(tk.Frame):
@@ -510,7 +501,6 @@ class Browse(tk.Frame):
         global decks
         self.columnconfigure(0,weight=1)
         self.rowconfigure(0, weight=1)
-        # self.grid_propagate(False)
 
         self.frm_edit = None
         self.frm_browse = tk.Frame(self,  height=300, width=600, bg='gray')
@@ -529,16 +519,20 @@ class Browse(tk.Frame):
 
         self.frm_options = tk.Frame(self.frm_browse)
         self.frm_options.rowconfigure(0, weight=1)
-        self.frm_options.columnconfigure((0,1,2), weight=1)
-        self.frm_options.columnconfigure(0, weight=9)
+        self.frm_options.columnconfigure((0,1,2,3), weight=2)
+        self.frm_options.columnconfigure(0, weight=20)
         self.drop = tk.OptionMenu(self.frm_options, self.deckDest, *self.decks_ref)
+        self.drop.config(width=1, font=("Calibri", (12)))
         self.drop.grid(row=0,column=0,sticky="nsew")
 
+        self.lbl_length = tk.Label(self.frm_options, text=f"{len(self.currentDeck)} cards", width=1, border=2, relief=tk.RAISED)
+        self.lbl_length.grid(row=0, column=1, sticky="nsew")
+
         self.btn_edit_deck = tk.Button(self.frm_options, text="Edit", cursor="hand2", width=1, command=self.editDeck)
-        self.btn_edit_deck.grid(row=0, column=1, sticky="nsew")
+        self.btn_edit_deck.grid(row=0, column=2, sticky="nsew")
 
         self.btn_del_deck = tk.Button(self.frm_options, text="\u274c", cursor="hand2", width=1, command=self.delDeck)
-        self.btn_del_deck.grid(row=0, column=2, sticky="nsew")
+        self.btn_del_deck.grid(row=0, column=3, sticky="nsew")
 
         self.frm_options.grid(row=0, column=0, sticky="nsew")
 
@@ -547,11 +541,12 @@ class Browse(tk.Frame):
         self.pagePos = 0
         self.pageMax = 10
 
-        self.frm_control = tk.Frame(self.frm_browse, width=1)
-        self.btn_left = tk.Button(self.frm_control, text='<-', cursor="hand2", command=self.switchPageLeft)
-        self.btn_left.pack(side=tk.LEFT)
-        self.btn_right = tk.Button(self.frm_control, text="->", cursor="hand2", command=self.switchPageRight)
-        self.btn_right.pack(side=tk.RIGHT)
+        self.frm_control = tk.Frame(self.frm_browse, width=1, bg="gray24")
+        self.btn_left = tk.Button(self.frm_control, text='\u2190', cursor="hand2", height=2, width=4, command=self.switchPageLeft)
+   
+        self.btn_left.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.btn_right = tk.Button(self.frm_control, text="\u2192", cursor="hand2", height=2, width=4, command=self.switchPageRight)
+        self.btn_right.pack(side=tk.RIGHT, fill=tk.X, expand=True)
         self.frm_control.grid(row=2, column=0, sticky="nsew")
 
         self.view = tk.Frame(self.frm_browse, bg='darkgray')
@@ -576,10 +571,11 @@ class Browse(tk.Frame):
         countP = math.ceil(countC/pageMax)
         sortedCards = list(deck.cards)
         sortedCards.sort(key=lambda card:card.front)
+        self.lbl_length.config(text=f"{len(self.currentDeck)} cards")
 
         self.pagesList = []
         for p in range(countP):
-            self.pagesList.append(tk.Frame(self.view, height=200, width= 600))
+            self.pagesList.append(tk.Frame(self.view, height=200, width= 600, bg="gray24"))
             self.pagesList[p].rowconfigure(list(range(pageMax)), weight=1)
             self.pagesList[p].columnconfigure(0, weight=1)
 
@@ -648,17 +644,15 @@ class Browse(tk.Frame):
 
 class ViewItem(tk.Frame):
     def __init__(self, parent, card):
-        tk.Frame.__init__(self, parent, height=50, width=100, borderwidth=1, relief="solid")
+        tk.Frame.__init__(self, parent, height=50, width=100, borderwidth=1, relief="solid", bg="gray64")
         self.card = card
         self.rowconfigure(0,weight=1)
-        self.columnconfigure((0,1,2),weight=1)
-        self.columnconfigure(0, weight=9)
-        # self.grid_propagate(False)
-        self.item = tk.Label(self, text=str(card), width=1)
-        # self.item.pack(expand=True, fill=tk.BOTH)
+        self.columnconfigure((0,1,2),weight=3)
+        self.columnconfigure(0, weight=20)
+        self.item = tk.Label(self, text=str(card), font=("Calibri", 12), bg="gray64", width=1, height=1)
         self.item.grid(row=0, column=0, sticky="nsew")
 
-        self.btn_edit = tk.Button(self, text="Edit", cursor="hand2", borderwidth=1, relief="solid", command=self.editCard)
+        self.btn_edit = tk.Button(self, text="Edit", cursor="hand2", borderwidth=1, relief="solid", font=("Calibri", 12, "bold"), command=self.editCard)
         self.btn_edit.grid(row=0, column=1, sticky="nsew")
 
         self.btn_delete = tk.Button(self, text="\u274c", cursor="hand2", borderwidth=1,relief="solid", command=self.deleteCard)
