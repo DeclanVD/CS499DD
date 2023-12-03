@@ -706,25 +706,28 @@ class EditFrame(tk.Frame):
         self.columnconfigure((0,1,2), weight=1)
         self.rowconfigure((0,1,2,3), weight=1)
 
-        self.lbl_front = tk.Label(self, text="Front: ")
-        self.lbl_front.grid(row=1, column=0, sticky="nsew")
+        self.lbl_head = tk.Label(self, text="Edit Card", font="Calibri 26 bold", width=1, height=1)
+        self.lbl_head.grid(row=0, column=0, columnspan=3, padx=10, pady=30, sticky="nsew")
 
-        self.ent_front = tk.Entry(self)
+        self.lbl_front = tk.Label(self, text="Front: ", font=("Calibri", 14, 'bold'))
+        self.lbl_front.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.ent_front = tk.Entry(self, font=("Calibri", 14))
         self.ent_front.insert(0, card.front)
-        self.ent_front.grid(row=1, column=1, columnspan=2, sticky="nsew")
+        self.ent_front.grid(row=1, column=1, columnspan=2, pady=10, sticky="nsew")
 
-        self.lbl_back = tk.Label(self, text="Back: ")
-        self.lbl_back.grid(row=2, column=0, sticky="nsew")
+        self.lbl_back = tk.Label(self, text="Back: ", font=("Calibri", 14, 'bold'))
+        self.lbl_back.grid(row=2, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.ent_back = tk.Entry(self)
+        self.ent_back = tk.Entry(self, font=("Calibri", 14))
         self.ent_back.insert(0, card.back)
-        self.ent_back.grid(row=2, column=1, columnspan=2, sticky="nsew")
+        self.ent_back.grid(row=2, column=1, columnspan=2, pady=10, sticky="nsew")
 
-        self.btn_cancel = tk.Button(self, text="Cancel", cursor="hand2", width=1, command=self.exitScreen)
-        self.btn_cancel.grid(row=3, column=0, sticky="nsew")
+        self.btn_cancel = tk.Button(self, text="Cancel", font=("Calibri", 14, "bold"), cursor="hand2", width=1, command=self.exitScreen)
+        self.btn_cancel.grid(row=3, column=0, padx=10, pady=10, sticky="nsew")
 
-        self.btn_submit = tk.Button(self, text="Submit Changes", cursor="hand2", width=1, command=self.editSubmit)
-        self.btn_submit.grid(row=3, column=2, sticky="nsew")
+        self.btn_submit = tk.Button(self, text="Submit Changes", font="Calibri 14 bold", cursor="hand2", width=1, command=self.editSubmit)
+        self.btn_submit.grid(row=3, column=2, padx=10, pady=10, sticky="nsew")
 
     def exitScreen(self):
         browse = app.browse
@@ -753,23 +756,27 @@ class EditFrameDeck(tk.Frame):
     def __init__(self, parent, deck):
         tk.Frame.__init__(self, parent, height=300, width=600, bg="gray")
         global decks
-        self.rowconfigure((0,1,2), weight=1)
+        self.rowconfigure((0,1,2), weight=4)
+        self.rowconfigure(0, weight=1)
         self.columnconfigure((0,1,2), weight=1)
         
         self.deck = deck
 
-        self.lbl_title = tk.Label(self, text="Title: ")
-        self.lbl_title.grid(row=1, column=0, sticky="nsew")
+        self.lbl_head = tk.Label(self, text="Edit Deck", font="Calibri 26 bold", width=1, height=1)
+        self.lbl_head.grid(row=0, column=0, columnspan=3, padx=10, pady=30, sticky="nsew")
 
-        self.ent_title = tk.Entry(self)
+        self.lbl_title = tk.Label(self, text="Title: ", font="Calibri 14 bold", width=1, height=1)
+        self.lbl_title.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.ent_title = tk.Entry(self, font="Calibri 14", width=1)
         self.ent_title.insert(0, self.deck.title)
-        self.ent_title.grid(row=1, column=1, columnspan=2, sticky="nsew")
+        self.ent_title.grid(row=1, column=1, columnspan=2, pady=10, sticky="nsew")
 
-        self.btn_cancel = tk.Button(self, text="Cancel", cursor="hand2",  width=1, command=self.exitScreen)
-        self.btn_cancel.grid(row=2, column=0, sticky="nsew")
+        self.btn_cancel = tk.Button(self, text="Cancel", font="Calibri 14 bold", cursor="hand2",  width=1, height=1, command=self.exitScreen)
+        self.btn_cancel.grid(row=2, column=0, padx=10, pady=20, sticky="nsew")
 
-        self.btn_submit = tk.Button(self, text="Submit Changes", cursor="hand2", width=1, command=self.editSubmit)
-        self.btn_submit.grid(row=2, column=2, sticky="nsew")
+        self.btn_submit = tk.Button(self, text="Submit Changes", font="Calibri 14 bold",cursor="hand2", width=1, height=1, command=self.editSubmit)
+        self.btn_submit.grid(row=2, column=2, padx=10, pady=20, sticky="nsew")
 
     def exitScreen(self):
         browse = app.browse
