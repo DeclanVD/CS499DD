@@ -358,6 +358,10 @@ class Home(tk.Frame):
         frm_deck.grid_forget()
         self.frames_ref[frm_deck.title]=frm_deck
 
+        frm_deck.bind("<space>", self.flipCurrent)
+        frm_deck.bind("<Left>", frm_deck.moveLeft)
+        frm_deck.bind("<Right>", frm_deck.moveRight)
+
         d = len(self.radios)
         radio = tk.Radiobutton(self.deckMenu, text=f'{decks[d].title}', variable= self.selection, value=f'{decks[d].title}',indicatoron=0,cursor="hand2", command=self.select)
         self.radios.append(radio)
