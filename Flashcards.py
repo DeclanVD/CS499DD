@@ -177,6 +177,7 @@ class App(tk.Frame):
 
     def switchHome(self):
         self.switchPage(0)
+        self.home.currentDeck.focus_set()
     def switchAdd_Frame(self):
         self.switchPage(1)
     def switchBrowse(self):
@@ -208,7 +209,7 @@ class CardFrame(tk.Frame):
 
         self.cardSides = [self.lbl_Front, self.lbl_Back]
     
-    def flip(self, event):
+    def flip(self, event=None):
         self.cardSides[self.state].grid_forget()
         self.state = (self.state + 1)%2
         self.cardSides[self.state].tkraise()
@@ -262,9 +263,9 @@ class DeckFrame(tk.Frame):
         self.btn_flip.bind("<Button-1>", self.frm_Card.flip)
         self.frm_Card.grid(row=0,column=0, sticky="nsew")
 
-    def moveLeft(self):
+    def moveLeft(self, event=None):
         self.changeCard(-1)
-    def moveRight(self):
+    def moveRight(self, event=None):
         self.changeCard(1)
 
     def updateCards(self):
@@ -278,7 +279,7 @@ class DeckFrame(tk.Frame):
 class Home(tk.Frame):
     def __init__(self, parent):
     # Configuring ===================================
-        tk.Frame.__init__(self, parent, height=300, width=600, bg='gray24')
+        tk.Frame.__init__(self, parent, height=410, width=600, bg='gray24')
         global decks
         self.rowconfigure(0, weight=1)
         self.columnconfigure((0,2), weight=1)
@@ -295,10 +296,15 @@ class Home(tk.Frame):
 
         for f in range(len(decks)):
             frm_deck = DeckFrame(self, decks[f])
+            frm_deck.bind("<space>", self.flipCurrent)
+            frm_deck.bind("<Left>", frm_deck.moveLeft)
+            frm_deck.bind("<Right>", frm_deck.moveRight)
             frm_deck.grid(row=0, column=1, sticky="nsew")
             frm_deck.grid_forget()
 
             self.frames_ref[decks[f].title] = frm_deck
+
+        self.currentDeck = self.frames_ref[decks[0].title]
 
         self.btn_back = tk.Button(self, text="Back", font=("Calibri", (12)), cursor="hand2", command=self.back)
         self.btn_back.grid(row=0, column=0, padx=10, pady=10,sticky="nw")
@@ -327,8 +333,16 @@ class Home(tk.Frame):
         self.btn_back.tkraise()
         self.btn_back.grid(row=0, column=0, padx=10, pady=10,sticky="nw")
 
-        self.frames_ref[sel].tkraise()
-        self.frames_ref[sel].grid(row=0, column=1, sticky="nsew")
+        self.currentDeck = self.frames_ref[sel]
+        self.currentDeck.tkraise()
+        self.currentDeck.grid(row=0, column=1, sticky="nsew")
+        self.currentDeck.focus_set()
+
+
+    def flipCurrent(self, event=None):
+        sel = self.selection.get()
+        deck = self.frames_ref[sel]
+        deck.frm_Card.flip()
     
     def back(self):
         sel = self.selection.get()
@@ -336,6 +350,7 @@ class Home(tk.Frame):
         self.btn_back.grid_forget()
         self.deckMenu.tkraise()
         self.deckMenu.grid(row=0, column=1, sticky="nsew")
+        self.deckMenu.focus_set()
 
     def addDeck(self, deck):
         frm_deck = DeckFrame(self, deck)
